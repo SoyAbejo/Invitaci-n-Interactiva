@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Invitación de Viaje!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+
+        .plane {
+            font-size: 4em;
+            display: inline-block;
+            animation: fly 3s ease-in-out infinite;
+        }
+
+        @keyframes fly {
+            0%, 100% { transform: translateX(-10px) translateY(0); }
+            50% { transform: translateX(10px) translateY(-10px); }
+        }
+
+        .tickets-container {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .ticket {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: slideIn 0.6s ease-out backwards;
+        }
+
+        .ticket:nth-child(1) { animation-delay: 0.2s; }
+        .ticket:nth-child(2) { animation-delay: 0.4s; }
+        .ticket:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .ticket:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .ticket::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .ticket-title {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .edit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .ticket-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .ticket-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-value {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .field-value input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .field-value input:focus {
+            outline: none;
+            border-color: #764ba2;
+        }
+
+        .route {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .arrow {
+            font-size: 1.2em;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .save-btn, .cancel-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s;
+        }
+
+        .save-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .save-btn:hover, .cancel-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .add-ticket-btn {
+            background: white;
+            color: #667eea;
+            border: 3px dashed #667eea;
+            padding: 20px;
+            border-radius: 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .add-ticket-btn:hover {
+            background: #667eea;
+            color: white;
+            border-style: solid;
+        }
+
+        .message {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease-in 0.8s backwards;
+        }
+
+        .message h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        .message p {
+            color: #666;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        .color-picker-container {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeIn 1s ease-in;
+        }
+
+        .color-picker-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .color-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .color-btn {
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-size: 1em;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .color-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .color-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .ticket {
+                padding: 20px;
+            }
+
+            .ticket-content {
+                grid-template-columns: 1fr;
+            }
+
+            .route {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="plane">✈️</div>
+            <h1>¡Estás Invitado a un Viaje!</h1>
+            <p>Prepara tus maletas para una aventura inolvidable</p>
+        </div>
+
+        <div class="color-picker-container">
+            <div class="color-picker-header">🎨 Personalizar Colores</div>
+            <div class="color-options">
+                <button class="color-btn" onclick="changeTheme('purple')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Morado</button>
+                <button class="color-btn" onclick="changeTheme('blue')" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">Azul</button>
+                <button class="color-btn" onclick="changeTheme('pink')" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Rosa</button>
+                <button class="color-btn" onclick="changeTheme('green')" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">Verde</button>
+                <button class="color-btn" onclick="changeTheme('orange')" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">Naranja</button>
+                <button class="color-btn" onclick="changeTheme('sunset')" style="background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);">Atardecer</button>
+            </div>
+        </div>
+
+        <div class="tickets-container" id="ticketsContainer">
+            <!-- Los tickets se generarán aquí -->
+        </div>
+
+        <button class="add-ticket-btn" onclick="addTicket()">+ Agregar Nuevo Ticket</button>
+
+        <div class="message" style="margin-top: 30px;">
+            <h2>🌍 ¡Prepárate para la Aventura!</h2>
+            <p>Este viaje será una experiencia única llena de momentos inolvidables. 
+            No olvides tu pasaporte, tu mejor actitud y muchas ganas de disfrutar.</p>
+        </div>
+    </div>
+
+    <script>
+        let tickets = [
+            {
+                id: 1,
+                passenger: "Juan Pérez",
+                from: "Bogotá",
+                to: "Cartagena",
+                date: "15 de Noviembre, 2025",
+                time: "08:30 AM",
+                flight: "AV123",
+                seat: "12A"
+            },
+            {
+                id: 2,
+                passenger: "María García",
+                from: "Bogotá",
+                to: "Cartagena",
+                date: "15 de Noviembre, 2025",
+                time: "08:30 AM",
+                flight: "AV123",
+                seat: "12B"
+            }
+        ];
+
+        let editingId = null;
+
+        const themes = {
+            purple: {
+                bg: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                primary: '#667eea',
+                secondary: '#764ba2'
+            },
+            blue: {
+                bg: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                primary: '#4facfe',
+                secondary: '#00f2fe'
+            },
+            pink: {
+                bg: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                primary: '#f093fb',
+                secondary: '#f5576c'
+            },
+            green: {
+                bg: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+                primary: '#43e97b',
+                secondary: '#38f9d7'
+            },
+            orange: {
+                bg: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+                primary: '#fa709a',
+                secondary: '#fee140'
+            },
+            sunset: {
+                bg: 'linear-gradient(135deg, #ff6b6b 0%, #feca57 100%)',
+                primary: '#ff6b6b',
+                secondary: '#feca57'
+            }
+        };
+
+        function changeTheme(themeName) {
+            const theme = themes[themeName];
+            document.body.style.background = theme.bg;
+            
+            // Actualizar colores de los títulos y elementos
+            const ticketTitles = document.querySelectorAll('.ticket-title');
+            ticketTitles.forEach(title => title.style.color = theme.primary);
+            
+            const messageTitles = document.querySelectorAll('.message h2');
+            messageTitles.forEach(title => title.style.color = theme.primary);
+            
+            const routes = document.querySelectorAll('.route');
+            routes.forEach(route => route.style.color = theme.primary);
+            
+            const editBtns = document.querySelectorAll('.edit-btn');
+            editBtns.forEach(btn => {
+                btn.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+            });
+            
+            const addBtn = document.querySelector('.add-ticket-btn');
+            addBtn.style.color = theme.primary;
+            addBtn.style.borderColor = theme.primary;
+            
+            const inputs = document.querySelectorAll('.field-value input');
+            inputs.forEach(input => input.style.borderColor = theme.primary);
+            
+            // Animar el cambio
+            document.body.style.transition = 'background 0.5s ease';
+        }
+
+        function renderTickets() {
+            const container = document.getElementById('ticketsContainer');
+            container.innerHTML = '';
+
+            tickets.forEach(ticket => {
+                const isEditing = editingId === ticket.id;
+                
+                const ticketHTML = `
+                    <div class="ticket">
+                        <div class="ticket-header">
+                            <div class="ticket-title">Ticket #${ticket.id}</div>
+                            <button class="edit-btn" onclick="toggleEdit(${ticket.id})">
+                                ${isEditing ? '👁️ Ver' : '✏️ Editar'}
+                            </button>
+                        </div>
+                        
+                        <div class="ticket-content">
+                            <div class="ticket-field">
+                                <div class="field-label">Pasajero</div>
+                                <div class="field-value">
+                                    ${isEditing ? 
+                                        `<input type="text" value="${ticket.passenger}" onchange="updateField(${ticket.id}, 'passenger', this.value)">` :
+                                        ticket.passenger
+                                    }
+                                </div>
+                            </div>
+                            
+                            <div class="ticket-field">
+                                <div class="field-label">Vuelo</div>
+                                <div class="field-value">
+                                    ${isEditing ? 
+                                        `<input type="text" value="${ticket.flight}" onchange="updateField(${ticket.id}, 'flight', this.value)">` :
+                                        ticket.flight
+                                    }
+                                </div>
+                            </div>
+                            
+                            <div class="ticket-field">
+                                <div class="field-label">Asiento</div>
+                                <div class="field-value">
+                                    ${isEditing ? 
+                                        `<input type="text" value="${ticket.seat}" onchange="updateField(${ticket.id}, 'seat', this.value)">` :
+                                        ticket.seat
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="route">
+                            ${isEditing ? 
+                                `<input type="text" value="${ticket.from}" onchange="updateField(${ticket.id}, 'from', this.value)" style="width: 150px; text-align: center;">` :
+                                ticket.from
+                            }
+                            <span class="arrow">→</span>
+                            ${isEditing ? 
+                                `<input type="text" value="${ticket.to}" onchange="updateField(${ticket.id}, 'to', this.value)" style="width: 150px; text-align: center;">` :
+                                ticket.to
+                            }
+                        </div>
+
+                        <div class="ticket-content">
+                            <div class="ticket-field">
+                                <div class="field-label">Fecha</div>
+                                <div class="field-value">
+                                    ${isEditing ? 
+                                        `<input type="text" value="${ticket.date}" onchange="updateField(${ticket.id}, 'date', this.value)">` :
+                                        ticket.date
+                                    }
+                                </div>
+                            </div>
+                            
+                            <div class="ticket-field">
+                                <div class="field-label">Hora</div>
+                                <div class="field-value">
+                                    ${isEditing ? 
+                                        `<input type="text" value="${ticket.time}" onchange="updateField(${ticket.id}, 'time', this.value)">` :
+                                        ticket.time
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        ${isEditing ? `
+                            <div class="action-buttons">
+                                <button class="save-btn" onclick="toggleEdit(${ticket.id})">💾 Guardar</button>
+                                <button class="cancel-btn" onclick="deleteTicket(${ticket.id})">🗑️ Eliminar</button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                container.innerHTML += ticketHTML;
+            });
+        }
+
+        function toggleEdit(id) {
+            editingId = editingId === id ? null : id;
+            renderTickets();
+        }
+
+        function updateField(id, field, value) {
+            const ticket = tickets.find(t => t.id === id);
+            if (ticket) {
+                ticket[field] = value;
+            }
+        }
+
+        function deleteTicket(id) {
+            if (confirm('¿Estás seguro de eliminar este ticket?')) {
+                tickets = tickets.filter(t => t.id !== id);
+                editingId = null;
+                renderTickets();
+            }
+        }
+
+        function addTicket() {
+            const newId = Math.max(...tickets.map(t => t.id), 0) + 1;
+            tickets.push({
+                id: newId,
+                passenger: "Nuevo Pasajero",
+                from: "Origen",
+                to: "Destino",
+                date: "Fecha",
+                time: "Hora",
+                flight: "Vuelo",
+                seat: "Asiento"
+            });
+            editingId = newId;
+            renderTickets();
+        }
+
+        // Renderizar tickets iniciales
+        renderTickets();
+    </script>
+</body>
+</html>
